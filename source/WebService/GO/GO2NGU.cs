@@ -10,23 +10,27 @@ namespace jshepler.ngu.mods.WebService.GO
         {
             string body = null;
 
-            if (context.Request.HasEntityBody)
-            {
-                using (var sr = new StreamReader(context.Request.InputStream))
-                {
+            if (context.Request.HasEntityBody) {
+                using (var sr = new StreamReader(context.Request.InputStream)) {
                     body = sr.ReadToEnd();
                     context.Request.InputStream.Close();
                     sr.Close();
                 }
             }
-            else
-            {
+            else {
                 context.Response.SendResponse(HttpStatusCode.BadRequest, "missing payload");
                 return () => Plugin.ShowOverrideNotification($"GO2NGU: bad request \"{resource}\" - missing payload");
             }
 
-            switch (resource)
-            {
+            StreamWriter sw = new StreamWriter("C:\\Users\\Austin Wiley\\source\\repos\\log.txt", true) {
+                AutoFlush = true
+            };
+            sw.WriteLine(resource);
+            sw.WriteLine(body);
+            sw.WriteLine("----------");
+            sw.Close();
+
+            switch (resource) {
                 case "loadouts":
                     Loadouts.ImportFromJSON(body);
                     context.Response.SendResponse(HttpStatusCode.OK);
@@ -37,9 +41,19 @@ namespace jshepler.ngu.mods.WebService.GO
                     context.Response.SendResponse(HttpStatusCode.OK);
                     return () => Plugin.ShowOverrideNotification("GO2NGU: hacks");
 
+                case "augments":
+                    Augments.ApplyAugmentTargets(body);
+                    context.Response.SendResponse(HttpStatusCode.OK);
+                    return () => Plugin.ShowOverrideNotification("GO2NGU: augments");
+
+                case "ngus":
+                    Ngus.ApplyTargets(body);
+                    context.Response.SendResponse(HttpStatusCode.OK);
+                    return () => Plugin.ShowOverrideNotification("GO2NGU: ngus");
+
                 default:
                     context.Response.SendResponse(HttpStatusCode.BadRequest, $"unknown resource: {resource}");
-                    return () => Plugin.ShowOverrideNotification("GO2NGU: loadouts");
+                    return () => Plugin.ShowOverrideNotification("GO2NGU: unknown resource: {resource}");
             }
         }
     }

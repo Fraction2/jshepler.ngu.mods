@@ -14,7 +14,7 @@ namespace jshepler.ngu.mods.WebService.GO
             switch (resource)
             {
                 case "augstats":
-                    json = BuildAugStats();
+                    json = Augments.BuildAugmentStats();
                     context.Response.SendResponse(HttpStatusCode.OK, json, ContentTypes.JSON);
                     return () => Plugin.ShowOverrideNotification("NGU2GO: aug stats");
 
@@ -84,7 +84,6 @@ namespace jshepler.ngu.mods.WebService.GO
             energy.Add("ngus", eNGUs);
             energy.Add("cap", Plugin.Character.totalCapEnergy());
             energy.Add("nguspeed", character.totalNGUSpeedBonus() * character.totalEnergyPower() * character.NGUController.energyNGUBonus() * character.allDiggers.totalEnergyNGUBonus() * character.adventureController.itopod.totalEnergyNGUBonus() * character.inventory.macguffinBonuses[4] * character.hacksController.totalEnergyNGUBonus() * character.beastQuestPerkController.totalEnergyNGUSpeed() * character.allChallenges.trollChallenge.totalEnergyNGUBonus() * character.wishesController.totalEnergyNGUSpeed() * character.cardsController.getBonus(cardBonus.energyNGUSpeed));
-
 
             var mn = character.NGU.magicSkills.Select(s => s.level).ToArray();
             var me = character.NGU.magicSkills.Select(s => s.evilLevel).ToArray();

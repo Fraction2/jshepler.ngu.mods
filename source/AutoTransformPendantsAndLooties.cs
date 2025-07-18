@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+using System;
 using System.Linq;
+using UnityEngine.TextCore;
 
 namespace jshepler.ngu.mods
 {
@@ -21,8 +23,7 @@ namespace jshepler.ngu.mods
             var inventory = __instance.character.inventory;
             var equipmentList = inventory.inventory;
 
-            if (numberOfInventorySlots > equipmentList.Count)
-            {
+            if (numberOfInventorySlots > equipmentList.Count) {
                 // should never happen, but just in case...
                 Plugin.LogInfo($"number of inventory slots > equipment list count: {numberOfInventorySlots} > {equipmentList.Count}");
             }
@@ -30,27 +31,49 @@ namespace jshepler.ngu.mods
             //AutoSaves.DoSave(__instance.character, $"AutoTransform - {DateTime.UtcNow:yyyyMMdd_HHmmss}");
 
             var doAnotherPass = true;
-            while (doAnotherPass)
-            {
+            while (doAnotherPass) {
                 doAnotherPass = false;
-                for (var slotIndex = 0; slotIndex < numberOfInventorySlots; slotIndex++)
-                {
-                    if (slotIndex >= equipmentList.Count)
-                    {
+                for (var slotIndex = 0; slotIndex < numberOfInventorySlots; slotIndex++) {
+                    if (slotIndex >= equipmentList.Count) {
                         break;
                     }
 
                     var item = equipmentList[slotIndex];
-                    if(item == null || !item.removable) continue;
+                    if (item == null) continue;
 
-                    if (_allIds.Contains(item.id))
-                    {
+                    ///merge all boosts unmaxed boosts into protected boosts
+                    if (!item.removable) {
+                        if (item.id < 40 && !Plugin.Character.inventory.itemList.itemFiltered[item.id]) {
+                            __instance.mergeAll(slotIndex);
+                        }                    ///otherwise just merge everything not a boost all of the time
+                        else {
+                            if (!Plugin.Character.inventory.itemList.itemMaxxed[item.id] && !item.isBoost()) {
+                                __instance.mergeAll(slotIndex);
+                            }
+                        }
+
+                        continue;
+                    }
+
+                    if (item.id == 66) {
+                        __instance.mergeAll(slotIndex);
+                        if (item.level > Plugin.Character.wandoos98.OSlevel) {
+                            try {
+                                var itemController = __instance.inventory[slotIndex];
+                                var method = AccessTools.Method(typeof(ItemController), "consumeItem");
+                                method.Invoke(itemController, []);
+                            } catch (Exception ex) {
+                                Plugin.ShowNotification($"{ex.Message}");
+                            }
+                        }
+                    }
+
+                    if (_allIds.Contains(item.id)) {
                         __instance.mergeAll(slotIndex);
                         item = equipmentList[slotIndex]; // mergeAll replaces item instance
 
                         // sanity check
-                        if (item == null)
-                        {
+                        if (item == null) {
                             Plugin.LogInfo($"item became null after merge - skipping");
                             continue;
                         }
@@ -62,8 +85,7 @@ namespace jshepler.ngu.mods
                         // from ItemController.consumeItem, modified because ItemController is the visible slot regardless of page,
                         // if the item to transform isn't on the current page, using ItemController.consumeItem won't work right
                         var transformItemId = __instance.checkItemTransform(item);
-                        if (transformItemId > 0)
-                        {
+                        if (transformItemId > 0) {
                             inventory.deleteItem(slotIndex);
                             __instance.itemInfo.makeLoot(transformItemId, slotIndex);
                             __instance.updateItem(slotIndex);

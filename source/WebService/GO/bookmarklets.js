@@ -1,6 +1,5 @@
 ﻿// minifier used: https://www.toptal.com/developers/javascript-minifier
 
-
 // GO2NGU/loadouts
 // javascript:fetch("http://localhost:8088/ngu/go2ngu/loadouts",{method:"POST",body:JSON.stringify(appState.savedequip)});
 function go2ngu_loadouts2() {
@@ -10,7 +9,6 @@ function go2ngu_loadouts2() {
             body: JSON.stringify(appState.savedequip)
         });
 }
-
 
 // NGU2GO/equipped
 // javascript:fetch("http://localhost:8088/ngu/ngu2go/equipped").then(e=>e.json()).then(e=>{let n=appState.savedequip;Object.assign(n.find(e=>"current"==e.name),e),appHandlers.handleSettings("savedequip",n)});
@@ -25,7 +23,6 @@ function ngu2go_equipped2() {
         });
 }
 
-
 // data/naked_emr3
 // javascript:fetch("http://localhost:8088/ngu/ngu2go/nakedemr").then(t=>t.json()).then(t=>{let a=appState.capstats;Object.assign(a,t),appHandlers.handleSettings("capstats",a)});
 function ngu2go_nakedemr3() {
@@ -37,7 +34,6 @@ function ngu2go_nakedemr3() {
             appHandlers.handleSettings("capstats", capStats);
         });
 }
-
 
 // NGU2GO/augstats
 // javascript:fetch("http://localhost:8088/ngu/NGU2GO/augstats").then(t=>t.json()).then(t=>{let s=appState.augstats;Object.assign(s,t),appHandlers.handleSettings("augstats",s)});
@@ -51,7 +47,6 @@ function ngu2go_augstats() {
         });
 }
 
-
 // NGU2GO/ngustats
 // javascript:fetch("http://localhost:8088/ngu/NGU2GO/ngustats").then(t=>t.json()).then(t=>{let s=appState.ngustats;Object.assign(s,t),appHandlers.handleSettings("ngustats",s)});
 function ngu2go_ngustats() {
@@ -63,7 +58,6 @@ function ngu2go_ngustats() {
             appHandlers.handleSettings("ngustats", nguStats);
         });
 }
-
 
 // NGU2GO/hacks
 // javascript:fetch("http://localhost:8088/ngu/ngu2go/hacks").then(e=>e.json()).then(e=>{let a=appState.hackstats;a.rpow=e.rpow,a.rcap=e.rcap,a.hackspeed=e.hackspeed;for(let c=0;c<15;c++)a.hacks[c].goal=a.hacks[c].level=e.hacks[c].level,a.hacks[c].reducer=e.hacks[c].reducer;appHandlers.handleSettings("hackstats",a)});
@@ -83,7 +77,6 @@ function ngu2go_hacks2() {
         });
 }
 
-
 // GO2NGU/hacks
 // javascript:fetch("http://localhost:8088/ngu/go2ngu/hacks",{method:"POST",body:JSON.stringify(appState.hackstats.hacks.map(a=>a.goal))});
 function go2ngu_hacks2() {
@@ -92,7 +85,6 @@ function go2ngu_hacks2() {
         body: JSON.stringify(appState.hackstats.hacks.map(h => h.goal))
     });
 }
-
 
 // NGU2GO/wishstats
 // javascript:fetch("http://localhost:8088/ngu/NGU2GO/wishstats").then(s=>s.json()).then(s=>{let t=appState.wishstats;Object.assign(t,s),appHandlers.handleSettings("wishstats",t)});
@@ -104,4 +96,28 @@ function ngu2go_wishstats() {
             Object.assign(wishStats, data);
             appHandlers.handleSettings("wishstats", wishStats);
         });
+}
+
+// GO2NGU/augments
+// javascript:fetch("http://localhost:8088/ngu/go2ngu/augments", {method: "POST",body: JSON.stringify(Array.from(document.querySelectorAll('table')[1].rows).slice(1).map(e => ({ level: e.cells[4].textContent, upgrade: e.cells[5].textContent })))});
+function go2ngu_augments() {
+    fetch("http://localhost:8088/ngu/go2ngu/augments", {
+        method: "POST",
+        body: JSON.stringify(Array.from($$('table')[1].rows)
+            .slice(1)
+            .map(e => ({ level: e.cells[4].textContent, upgrade: e.cells[5].textContent })))
+    });
+}
+
+//// GO2NGU/ngus
+// javascript:fetch("http://localhost:8088/ngu/go2ngu/ngus", {method: "POST",body: JSON.stringify(Array.from(document.querySelectorAll('table')[2].rows).slice(1).filter(e => e.cells[5] != undefined).map(e=> ({normal:e.cells[5].textContent, evil:e.cells[6].textContent, sadistic:e.cells[7].textContent})))})
+function go2ngu_ngus() {
+    fetch("http://localhost:8088/ngu/go2ngu/ngusNormal", {
+        method: "POST",
+        body: JSON.stringify(
+            Array.from(document.querySelectorAll('table')[2].rows)
+                .slice(1)
+                .filter(e => e.cells[5] != undefined)
+                .map(e => ({ normal: e.cells[5].textContent, evil: e.cells[6].textContent, sadistic: e.cells[7].textContent })))
+    });
 }
