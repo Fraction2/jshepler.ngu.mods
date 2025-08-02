@@ -1,4 +1,6 @@
 ﻿using HarmonyLib;
+using jshepler.ngu.mods.GameData;
+using jshepler.ngu.mods.WebService;
 using System;
 using System.Linq;
 using UnityEngine.TextCore;
@@ -21,12 +23,15 @@ namespace jshepler.ngu.mods
 
             var numberOfInventorySlots = __instance.curSpaces();
             var inventory = __instance.character.inventory;
+            var invController = __instance.character.inventoryController;
             var equipmentList = inventory.inventory;
 
             if (numberOfInventorySlots > equipmentList.Count) {
                 // should never happen, but just in case...
                 Plugin.LogInfo($"number of inventory slots > equipment list count: {numberOfInventorySlots} > {equipmentList.Count}");
             }
+
+            //Autosort.DoAutosort();
 
             //AutoSaves.DoSave(__instance.character, $"AutoTransform - {DateTime.UtcNow:yyyyMMdd_HHmmss}");
 
@@ -42,22 +47,32 @@ namespace jshepler.ngu.mods
                     if (item == null) continue;
 
                     ///merge all boosts unmaxed boosts into protected boosts
-                    if (!item.removable) {
-                        if (item.id < 40 && !Plugin.Character.inventory.itemList.itemFiltered[item.id]) {
-                            __instance.mergeAll(slotIndex);
-                        }                    ///otherwise just merge everything not a boost all of the time
-                        else {
-                            if (!Plugin.Character.inventory.itemList.itemMaxxed[item.id] && !item.isBoost()) {
-                                __instance.mergeAll(slotIndex);
-                            }
-                        }
+                    if (!item.removable && item.isBoost() && !Plugin.Character.inventory.itemList.itemMaxxed[item.id]) {
+                        __instance.mergeAll(slotIndex);
+                        continue;
+                    }
 
+                    if (!item.removable) {
+                        __instance.mergeAll(slotIndex);
                         continue;
                     }
 
                     if (item.id == 66) {
                         __instance.mergeAll(slotIndex);
-                        if (item.level > Plugin.Character.wandoos98.OSlevel) {
+                        if (item.level > Plugin.Character.wandoos98.OSlevel && !item.removable) {
+                            try {
+                                var itemController = __instance.inventory[slotIndex];
+                                var method = AccessTools.Method(typeof(ItemController), "consumeItem");
+                                method.Invoke(itemController, []);
+                            } catch (Exception ex) {
+                                Plugin.ShowNotification($"{ex.Message}");
+                            }
+                        }
+                    }
+
+                    if (item.id == 163) {
+                        __instance.mergeAll(slotIndex);
+                        if (item.level > Plugin.Character.wandoos98.XLLevels) {
                             try {
                                 var itemController = __instance.inventory[slotIndex];
                                 var method = AccessTools.Method(typeof(ItemController), "consumeItem");
@@ -93,6 +108,9 @@ namespace jshepler.ngu.mods
                             doAnotherPass = true;
                         }
                     }
+
+                    __instance.mergeAll(slotIndex);
+
                 }
             }
 

@@ -14,12 +14,12 @@ namespace jshepler.ngu.mods.WebService.Triggers
             IsRunning = true;
 
             var currentMenu = Plugin.Character.CurrentMenu();
-            Plugin.Character.menuSwapper.SwapMenu(Menu.FightBoss);
+            //Plugin.Character.menuSwapper.SwapMenu(Menu.FightBoss);
 
             yield return mods.FightBoss.RunFight();
             yield return _bossDiedPause;
 
-            Plugin.Character.menuSwapper.SwapMenu(currentMenu);
+            //Plugin.Character.menuSwapper.SwapMenu(currentMenu);
             IsRunning = false;
         }
     }

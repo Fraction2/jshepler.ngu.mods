@@ -57,6 +57,20 @@ namespace jshepler.ngu.mods.WebService.GO
             return root.ToString();
         }
 
+        internal static string ChangeEquip(string json)
+        {
+            var target = JSON.Parse(json);
+            var slot = Slot.Parse(target);
+
+            var inv = Plugin.Character.inventory;
+            var con = Plugin.Character.inventoryController;
+            if (inv.head.id != slot.head) {
+                //inv.swapHead();
+            }
+
+            return string.Empty;
+        }
+
         private static int GOID(Equipment item, int emptyId)
         {
             return item.id == 0 ? emptyId : item.id;

@@ -246,7 +246,7 @@ namespace jshepler.ngu.mods
         [HarmonyPostfix, HarmonyPatch(typeof(ButtonShower), "showPotionTimer")]
         private static void ButtonShower_showPotionTimer_postfix(ButtonShower __instance, ref string ___message)
         {
-            var display = Plugin.Character.display;
+            Func <double,string> display = Plugin.Character.display;
 
             if (_altIsDown)
             {

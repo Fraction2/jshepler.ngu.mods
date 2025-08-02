@@ -38,7 +38,7 @@ namespace jshepler.ngu.mods.BarTooltips
             }
 
             var magCap = Plugin.Character.totalCapMagic();
-            var display = Plugin.Character.display;
+            System.Func<double, string> display = Plugin.Character.display;
             var text = $"<b>Blood Gained Per Bar Fill:</b> {display(bloodAdded)}"
                 + $"\n<b>Total Blood gained from this ritual:</b> {display(totalBoost)}"
                 + $"\n\n<b>Time left to Ritual Completion:</b> {timeLeft}"

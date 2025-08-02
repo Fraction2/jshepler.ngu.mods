@@ -105,6 +105,11 @@ namespace jshepler.ngu.mods.WebService
                     _actions.Enqueue(Twitch.API.HandleAuthRedirectRequest(context));
                     break;
 
+                case "autosort":
+                    _actions.Enqueue(Autosort.DoAutosort);
+                    context.Response.SendResponse(HttpStatusCode.OK);
+                    break;
+
                 default:
                     context.Response.SendResponse(HttpStatusCode.BadRequest, $"unknown handler: {segments[0]}");
                     break;

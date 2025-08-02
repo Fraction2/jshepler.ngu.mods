@@ -1,9 +1,12 @@
 ﻿using HarmonyLib;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
+using UnityEngine.TextCore;
 
 namespace jshepler.ngu.mods
 {
@@ -31,20 +34,54 @@ namespace jshepler.ngu.mods
             if (original != null)
                 return;
 
+            //QualitySettings.vSyncCount = 0;
+            //Application.targetFrameRate = 0;
             Plugin.OnUpdate += Update;
         }
 
+        [HarmonyPrefix, HarmonyPatch(typeof(InventoryController), nameof(InventoryController.dumpAllIntoQuest))]
+        private static bool patch_dumpAllIntoQuest(int itemID)
+        {
+            bool flag = false;
+            for (int i = 0; i < Character.inventory.inventory.Count; i++) {
+                if (Character.inventory.inventory[i].removable) {
+                    if ((Character.adventure.itopod.perkLevel[66] <= 0) ? Character.beastQuestController.checkItemConsumed(Character.inventory.inventory[i].id) : Character.beastQuestController.checkItemConsumed(Character.inventory.inventory[i].id, Character.inventory.inventory[i].level)) {
+                        Character.inventory.deleteItem(i);
+                        flag = true;
+                    }
+                }
+            }
+
+            if (flag) {
+                Character.inventoryController.updateInventory();
+                Character.inventoryController.tooltip.showTooltip("BLOOP! All applicable Quest Items have been deposited!", 2f);
+                Character.inventoryController.tooltip.showTooltip("MWAAAA",2f);
+            }
+            return false;
+        }
         private static void Update(object sender, EventArgs e)
         {
+            Character.challenges.trollCounter = 1;
+            if (!Character.achievements.achievementComplete[127]) {
+                Character.achievements.achievementComplete[127] = true;
+            }
+
+            //var fruit = Character.yggdrasil.fruits[7];
+            //if (fruit.seconds < 10780) {
+            //    fruit.seconds = 10780;
+            //}
+
+
+            bool disabled = true;
+            if (disabled) {
+                return;
+            }
             if (Adventure.autoattacking)
                 return;
-
             if (!Controller.fightInProgress)
                 return;
-
             if (PlayerController.moveTimer > 0f)
                 return;
-
             bool isWalderp = Controller.zone == 16;
             //bool isWalderp = Controller.currentEnemy.spriteID == 306;
 
@@ -55,7 +92,6 @@ namespace jshepler.ngu.mods
                 ManualAttackMove();
             }
         }
-
         private static bool ApplyBuffs()
         {
             if (Heal())
@@ -75,6 +111,7 @@ namespace jshepler.ngu.mods
 
         private static void ManualAttackMove()
         {
+
             ///Do buffs?
             if (ApplyBuffs()) {
                 return;

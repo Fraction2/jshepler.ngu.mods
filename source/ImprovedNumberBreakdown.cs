@@ -46,7 +46,7 @@ namespace jshepler.ngu.mods
                 || (character.challenges.blindChallenge.inChallenge && character.allChallenges.blindChallenge.completions() >= 4))
                 return;
 
-            var disp = character.display;
+            System.Func<double,string> disp = character.display;
             var diffFactor = __instance.difficultyFactor();
             var lastBossId = (int)Math.Log(character.oldBossMulti, diffFactor);
             var curBossMultiCombined = character.bossMulti * character.oldBossMulti;

@@ -45,7 +45,7 @@ namespace jshepler.ngu.mods
         {
             var character = Plugin.Character;
             var controller = character.timeMachineController;
-            var d = character.display;
+            System.Func<double, string> d = character.display;
 
             var goldPerBar = (double)character.machine.realBaseGold;
             var fillsPerSecond = (double)controller.barFillsPerSecond();

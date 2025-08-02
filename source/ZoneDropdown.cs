@@ -13,7 +13,7 @@ namespace jshepler.ngu.mods
     {
         private static int _currentZoneValue;
 
-        [HarmonyPrefix, HarmonyPatch(typeof(AdventureController), "constructDropdown")]
+        //[HarmonyPrefix, HarmonyPatch(typeof(AdventureController), "constructDropdown")]
         private static bool AdventureController_constructDropdown_prefix(AdventureController __instance)
         {
             var zoneId = __instance.zone;
@@ -85,7 +85,7 @@ namespace jshepler.ngu.mods
             return false;
         }
 
-        [HarmonyTranspiler, HarmonyPatch(typeof(AdventureController), "updateMenu")]
+        //[HarmonyTranspiler, HarmonyPatch(typeof(AdventureController), "updateMenu")]
         private static IEnumerable<CodeInstruction> AdventureController_updateMenu_transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var zoneDropdown = typeof(AdventureController).GetField("zoneDropdown");
@@ -96,7 +96,7 @@ namespace jshepler.ngu.mods
             return cm.InstructionEnumeration();//.DumpToLog();
         }
 
-        [HarmonyTranspiler, HarmonyPatch(typeof(ZoneSelector), "changeZone")]
+        //[HarmonyTranspiler, HarmonyPatch(typeof(ZoneSelector), "changeZone")]
         private static IEnumerable<CodeInstruction> ZoneSelected_changeZone_prefix(IEnumerable<CodeInstruction> instructions)
         {
             var dropdownField = typeof(ZoneSelector).GetField("dropdown");
@@ -116,7 +116,7 @@ namespace jshepler.ngu.mods
             return cm.InstructionEnumeration();//.DumpToLog();
         }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(ZoneSelector), "selectZone")]
+        //[HarmonyPrefix, HarmonyPatch(typeof(ZoneSelector), "selectZone")]
         private static bool ZoneSelector_selectZone_prefix(ref int zone, ZoneSelector __instance)
         {
             if (__instance.ac.zone == 1000)
@@ -136,7 +136,7 @@ namespace jshepler.ngu.mods
             return true;
         }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(ZoneForwardClick), "goToMaxZone", [])]
+        //[HarmonyPrefix, HarmonyPatch(typeof(ZoneForwardClick), "goToMaxZone", [])]
         private static bool ZoneForwardClick_goToMaxZone_prefix(ZoneForwardClick __instance)
         {
             if (Plugin.Character.arbitrary.advAdvancerBought
@@ -146,7 +146,7 @@ namespace jshepler.ngu.mods
             return ZoneForwardClick_goToMaxZone_int_prefix(Zones.MAXZONEID, __instance);
         }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(ZoneForwardClick), "goToMaxZone", [typeof(int)])]
+        //[HarmonyPrefix, HarmonyPatch(typeof(ZoneForwardClick), "goToMaxZone", [typeof(int)])]
         private static bool ZoneForwardClick_goToMaxZone_int_prefix(int cap, ZoneForwardClick __instance)
         {
             if (cap < 0)

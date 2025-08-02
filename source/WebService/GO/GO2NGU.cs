@@ -22,14 +22,6 @@ namespace jshepler.ngu.mods.WebService.GO
                 return () => Plugin.ShowOverrideNotification($"GO2NGU: bad request \"{resource}\" - missing payload");
             }
 
-            StreamWriter sw = new StreamWriter("C:\\Users\\Austin Wiley\\source\\repos\\log.txt", true) {
-                AutoFlush = true
-            };
-            sw.WriteLine(resource);
-            sw.WriteLine(body);
-            sw.WriteLine("----------");
-            sw.Close();
-
             switch (resource) {
                 case "loadouts":
                     Loadouts.ImportFromJSON(body);
