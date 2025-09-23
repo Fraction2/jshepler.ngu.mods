@@ -34,8 +34,8 @@ namespace jshepler.ngu.mods
             if (original != null)
                 return;
 
-            //QualitySettings.vSyncCount = 0;
-            //Application.targetFrameRate = 0;
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 0;
             Plugin.OnUpdate += Update;
         }
 
@@ -55,20 +55,24 @@ namespace jshepler.ngu.mods
             if (flag) {
                 Character.inventoryController.updateInventory();
                 Character.inventoryController.tooltip.showTooltip("BLOOP! All applicable Quest Items have been deposited!", 2f);
-                Character.inventoryController.tooltip.showTooltip("MWAAAA",2f);
+                //Character.inventoryController.tooltip.showTooltip("MWAAAA",2f);
             }
             return false;
         }
         private static void Update(object sender, EventArgs e)
         {
             Character.challenges.trollCounter = 1;
-            if (!Character.achievements.achievementComplete[127]) {
-                Character.achievements.achievementComplete[127] = true;
-            }
+            //Character.inventory.weapon.level = 100;
+            //Character.inventory.head.level = 100;
+            //Character.inventory.chest.level = 100;
+            //Character.inventory.legs.level = 100;
+            //Character.inventory.boots.level = 100;
 
+            ///Fruit hackers?
             //var fruit = Character.yggdrasil.fruits[7];
-            //if (fruit.seconds < 10780) {
-            //    fruit.seconds = 10780;
+            //long fruitMaxTime = fruit.maxTier * 3600;
+            //if (fruit.growing() && fruit.seconds < fruitMaxTime) {
+            //    fruit.seconds = fruitMaxTime - 60;
             //}
 
 
