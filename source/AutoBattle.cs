@@ -75,7 +75,6 @@ namespace jshepler.ngu.mods
             //    fruit.seconds = fruitMaxTime - 60;
             //}
 
-
             bool disabled = true;
             if (disabled) {
                 return;
@@ -115,7 +114,6 @@ namespace jshepler.ngu.mods
 
         private static void ManualAttackMove()
         {
-
             ///Do buffs?
             if (ApplyBuffs()) {
                 return;
