@@ -61,9 +61,9 @@ namespace jshepler.ngu.mods.WebService.GO
                     energyNgus[x].sadisticTarget = data.Where(o => o.index == x && o.difficulty == "sadistic").First()?.newTarget ?? 0;
                 }
                 for (var x = 0; x < 7; x++) {
-                    magicNgus[x].target = data.Where(o => o.index == x && o.difficulty == "normal").First()?.newTarget ?? 0;
-                    magicNgus[x].evilTarget = data.Where(o => o.index == x && o.difficulty == "evil").First()?.newTarget ?? 0;
-                    magicNgus[x].sadisticTarget = data.Where(o => o.index == x && o.difficulty == "sadistic").First()?.newTarget ?? 0;
+                    magicNgus[x].target = data.Where(o => o.index == x + 9 && o.difficulty == "normal").First()?.newTarget ?? 0;
+                    magicNgus[x].evilTarget = data.Where(o => o.index == x + 9 && o.difficulty == "evil").First()?.newTarget ?? 0;
+                    magicNgus[x].sadisticTarget = data.Where(o => o.index == x + 9 && o.difficulty == "sadistic").First()?.newTarget ?? 0;
                 }
             } catch (Exception ex) {
                 sw.WriteLine(ex.Message);

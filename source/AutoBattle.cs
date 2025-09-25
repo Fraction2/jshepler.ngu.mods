@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -34,8 +32,8 @@ namespace jshepler.ngu.mods
             if (original != null)
                 return;
 
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = 0;
+            //QualitySettings.vSyncCount = 0;
+            //Application.targetFrameRate = 0;
             Plugin.OnUpdate += Update;
         }
 
@@ -74,6 +72,44 @@ namespace jshepler.ngu.mods
             //if (fruit.growing() && fruit.seconds < fruitMaxTime) {
             //    fruit.seconds = fruitMaxTime - 60;
             //}
+
+            static void CheckEnergy()
+            {
+                var bt = Character.training.attackEnergy.Sum() + Character.training.defenseEnergy.Sum();
+                var augs = Character.augments.augs.Sum(a => a.augEnergy + a.upgradeEnergy);
+                var at = Character.advancedTraining.energy.Sum();
+                var tm = Character.machine.speedEnergy;
+                var wand = Character.wandoos98.wandoosEnergy;
+                var ngus = Character.NGU.skills.Sum(n => n.energy);
+                var wishes = Character.wishes.wishes.Sum(w => w.energy);
+
+                var totalEnergy = bt + augs + at + tm + wand + ngus + wishes + Character.idleEnergy;
+
+                if (Character.curEnergy != totalEnergy) {
+                    Character.curEnergy = totalEnergy;
+                }
+            }
+            static void CheckMagic()
+            {
+                var tm = Character.machine.goldMultiMagic;
+                var bm = Character.bloodMagic.ritual.Sum(r => r.magic);
+                var wand = Character.wandoos98.wandoosMagic;
+                var wishes = Character.wishes.wishes.Sum(w => w.magic);
+                var ngus = Character.NGU.magicSkills.Sum(n => n.magic);
+
+                var totalMagic = tm + bm + wand + wishes + ngus + Character.magic.idleMagic;
+                if (Character.magic.curMagic != totalMagic) {
+                    Character.magic.curMagic = totalMagic;
+                }
+            }
+            CheckEnergy();
+            CheckMagic();
+
+            if (Character.settings.nguLevelTrack == difficulty.evil) {
+                if (!(Character.NGU.skills.Take(Character.NGU.NGUEnergySize()).Any(x => x.evilLevel < x.evilTargetLevel()) || Character.NGU.magicSkills.Take(Character.NGU.NGUMagicSize()).Any(x => x.evilLevel < x.evilTargetLevel()))) {
+                    Character.NGUController.toNormalLevelTrack();
+                }
+            }
 
             bool disabled = true;
             if (disabled) {
