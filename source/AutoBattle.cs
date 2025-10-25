@@ -57,6 +57,7 @@ namespace jshepler.ngu.mods
             }
             return false;
         }
+
         private static void Update(object sender, EventArgs e)
         {
             Character.challenges.trollCounter = 1;

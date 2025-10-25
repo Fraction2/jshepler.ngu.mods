@@ -26,7 +26,12 @@ namespace jshepler.ngu.mods.WebService.GO
 
         internal static void ApplyTargets(string json)
         {
-            sw = new("C:\\Users\\Austin Wiley\\source\\repos\\logs.txt") { AutoFlush = true };
+            try {
+                sw = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source\\repos\\logs.txt")) { AutoFlush = true };
+            } catch (Exception ex) {
+                Plugin.Character.inventoryController.tooltip.showTooltip($"Exception: {ex.Message}");
+                return;
+            }
             sw.WriteLine(json);
             var energyNgus = Plugin.Character.NGU.skills.ToList();
             var magicNgus = Plugin.Character.NGU.magicSkills.ToList();
